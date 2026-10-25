@@ -366,6 +366,7 @@ kbd{font-family:inherit; font-weight:700; border:1px solid var(--key-line); bord
 .rtext .rl{white-space:pre;overflow:hidden;color:var(--ink)}
 .rtext .rl:not(.cur){opacity:.5}
 .rtext .rl.cur span.d{color:var(--target);opacity:.55}
+#ad-overlay, .ad-model, .app > div[style*="]{display:none !important} //ye ads rokny k liye hay main per
 .rtext .rl.cur span.c{background:linear-gradient(var(--target),var(--target-2));color:#fff;border-radius:5px;box-shadow:0 0 0 2px var(--target);animation:curpulse 1.1s ease-in-out infinite}
 .rtext .rl.cur span.c.bad{background:var(--wrong);box-shadow:0 0 0 2px var(--wrong);animation:shake .3s}
 .rmeta{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:700}
