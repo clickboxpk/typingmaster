@@ -19,12 +19,12 @@ window.PSDC_CONFIG = {
   /* Adsterra: dashboard se "Get Code" karke key aur script link yahan paste karein.
      enabled:true karte hi ads lag jayenge. */
   ads: {
-    enabled: false,
+    enabled: true,
     /* Banner 728x90 (desktop) - Adsterra "Banner" format */
-    banner728: { key: "", src: "" },   /* src example: "https://www.highperformanceformat.com/KEY/invoke.js" */
+    banner728: { key: "463ecea6e44bfaf795243e2ca505b004", src: "https://bauval.org/22/463ecea6e44bfaf795243e2ca505b004" },   /* src example: "https://www.highperformanceformat.com/KEY/invoke.js" */
     /* Banner 320x50 (mobile) */
-    banner320: { key: "", src: "" },
+    banner320: { key: "e1243c851039c7afbf3a9cb34246d65e", src: "https://bauval.org/22/e1243c851039c7afbf3a9cb34246d65e" },
     /* Optional: Social Bar / Popunder jaisa single script link (Adsterra code me jo src ho) */
-    socialBar: ""
+    socialBar: "https://bauval.org/14/9e18dcae2739a0cbde0ff09f542fe6ed"
   }
 };
