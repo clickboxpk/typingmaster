@@ -26,6 +26,13 @@ var LESSONS=[
 ];
 var TESTS=["Typing is a skill that we can learn with practice. Sit straight and keep your feet flat on the floor. Place your fingers on the home row keys and look at the screen. Do not hurry. Type each word with care and press the space bar with your thumb. A little practice every day will make you fast and accurate.", "A computer is an electronic machine that accepts data, processes it and gives us the result. The keyboard and the mouse are used to enter data. The monitor shows the output on the screen. The files that we create are saved on the hard disk. Always save your work and close all programs before you shut down the computer.", "Good typists use all ten fingers and do not look at the keyboard. Speed comes after accuracy, so correct every mistake at once. Take a short break after every thirty minutes of work to rest your eyes and wrists. Keep the screen at the level of your eyes and sit about an arm length away from the monitor.", "The internet connects millions of computers around the world. We use it to send email, search for information, study online and talk to friends. Always keep your password secret and never click on links from people that you do not know. Use a strong password with letters, numbers and symbols, and log out when you finish.", "On 15 March 2026, a new batch of 40 students started the DIT course. The class runs from 9 AM to 1 PM, six days a week. Students learn MS Word, Excel, PowerPoint and typing. Each student must practise for 30 minutes daily and aim to reach 40 words per minute by the end of month 3."];
 TESTS.forEach(function(t,i){LESSONS.push({name:"Typing Test "+(i+1),test:true,testNo:i+1,keys:"",lead:"Timed test: type the passage as fast and accurately as you can. The timer starts with your first key.",show:"TIMED TEST",tip:"Accuracy first. Do not look at your hands.",text:t,words:t.split(" ")})});
+(function(){var C=window.PSDC_CONTENT;if(!C)return;
+function pick(x,n){var b=x.slice(),o=[];while(o.length<n&&b.length)o.push(b.splice(Math.random()*b.length|0,1)[0]);return o}
+function add(n,w){LESSONS.forEach(function(l){if(l.name===n)l.words=l.words.concat(w)})}
+add("Common Words",C.common);add("Computer Words",C.computer);
+[["Medium",C.med,8],["Hard",C.hard,15]].forEach(function(g){for(var k=1;k<=3;k++){var t=pick(g[1],g[2]).join(" ");
+LESSONS.push({name:g[0]+" Test "+k,level:g[0],test:true,testNo:LESSONS.filter(function(x){return x.test}).length+1,keys:"",lead:g[0]+" level timed test: a longer passage, never repeated. The timer starts with your first key.",show:"TIMED TEST",tip:"Accuracy first. Do not look at your hands.",text:t,words:t.split(" ")})}});
+})();
 
 /* ---------------- keyboard ---------------- */
 function K(c){return {l:c.toUpperCase(),u:1,k:c}}
@@ -133,12 +140,12 @@ function startLesson(){S.mode="typing";renderAll();refocus()}
 function renderLessons(){
   var nav=$("#lessons");nav.innerHTML="";
   LESSONS.forEach(function(l,i){
-    var b=document.createElement("button");b.type="button";b.className="lesson";
+    var b=document.createElement("button");b.type="button";b.className="lesson";b.title=l.name;
     if(i===S.li)b.setAttribute("aria-current","true");
     var st=save[i]?"★".repeat(save[i].stars)+"☆".repeat(3-save[i].stars):"";
     b.innerHTML='<span class="n">'+(i+1)+'</span><span class="t"><b></b><small></small></span><span class="st">'+st+'</span>';
     b.querySelector("b").textContent=l.name;
-    b.querySelector("small").textContent=l.keys?l.keys.toUpperCase().split("").join(" "):(l.test?"Timed test":l.topics?"Paragraph topics":"Practice");
+    b.querySelector("small").textContent=l.keys?l.keys.toUpperCase().split("").join(" "):(l.test?(l.level||"Easy")+" \u00B7 Timed test":l.topics?"Paragraph topics":"Practice");
     b.addEventListener("click",function(){loadLesson(i)});
     if(l.test){b.classList.add("test");b.querySelector(".n").textContent="T"+l.testNo}
     nav.appendChild(b);
@@ -218,7 +225,7 @@ function refocus(){try{cap.focus({preventScroll:true})}catch(e){}}
 document.addEventListener("keydown",function(e){
   if(e.ctrlKey||e.metaKey||e.altKey||e.isComposing)return;
   if(e.target&&e.target.tagName==="INPUT"&&e.target.id!=="cap")return;
-  if(window.GAME_ON){if(e.key==="Escape"||e.key==="Enter"||e.key.length===1){e.preventDefault();window.gameKey(e.key)}return}
+  if(window.GAME_ON){if(e.target&&e.target.tagName==="SUMMARY")return;if(e.key==="Escape"||e.key==="Enter"||e.key.length===1){e.preventDefault();window.gameKey(e.key)}return}
   if(e.key&&e.key.length===1){e.preventDefault();press(e.key)}
 });
 cap.addEventListener("input",function(){var v=cap.value;cap.value="";for(var i=0;i<v.length;i++)(window.GAME_ON?window.gameKey:press)(v[i])});
@@ -242,13 +249,12 @@ function press(ch){
     S.correct++;S.typed++;S.ci++;S.streak++;
     if(S.ci>=curWord().length){S.wi++;S.ci=0;if(isPara()&&S.wi>=S.words.length){finish();return}}
     renderPrompt();renderKeys();updateSide();
-    if(S.streak%HEART_EVERY===0)love(document.querySelector("#prompt .cur"));
-    petOk(S.streak%HEART_EVERY===0);
+        petOk(S.streak%HEART_EVERY===0);
   }else{
     S.wrong++;S.streak=0;petBad();
     flashKey(ch,true);
     var cur=document.querySelector("#prompt .cur");
-    if(cur){cur.classList.remove("shake");void cur.offsetWidth;cur.classList.add("shake");cry(cur)}
+    if(cur){cur.classList.remove("shake");void cur.offsetWidth;cur.classList.add("shake")}
     sadSound();
     var win=$("#win");win.classList.remove("flash");void win.offsetWidth;win.classList.add("flash");
     if(ch!==ch.toLowerCase()&&ch.toLowerCase()===target)toast("Caps Lock or Shift is on. Turn it off and try again.");
@@ -554,7 +560,7 @@ var ship={x:0,y:0,ang:0,angT:0,rec:0,tx:0,idle:0,vis:true};
 var ufo={x:0,y:0,lit:0};
 var bgG=null,vgG=null,sfG=null;
 var LET="abcdefghijklmnopqrstuvwxyz";
-var WORDS=Array.from(new Set(("type,fast,keys,home,code,data,file,mouse,click,print,paste,copy,save,word,excel,power,point,email,link,icon,menu,folder,window,laptop,monitor,keyboard,printer,scanner,network,internet,browser,google,python,program,system,memory,server,cloud,mobile,design,student,course,skills,center,practice,speed,accuracy,shooter,galaxy,rocket,planet,laser,orbit,comet,cosmos,typing,master,future,digital,pixel,cursor,button,search,upload,download,update,backup,delete,format,margin,column,sheet,slide,theme,table,chart,image,video,audio,screen,drive,share,login,virus,cable,robot,photo,music,zoom,quick,jump,fix,yes,hello,keen,nova,wifi,gamer,xerox").split(",")));
+var WORDS=Array.from(new Set(("type,fast,keys,home,code,data,file,mouse,click,print,paste,copy,save,word,excel,power,point,email,link,icon,menu,folder,window,laptop,monitor,keyboard,printer,scanner,network,internet,browser,google,python,program,system,memory,server,cloud,mobile,design,student,course,skills,center,practice,speed,accuracy,shooter,galaxy,rocket,planet,laser,orbit,comet,cosmos,typing,master,future,digital,pixel,cursor,button,search,upload,download,update,backup,delete,format,margin,column,sheet,slide,theme,table,chart,image,video,audio,screen,drive,share,login,virus,cable,robot,photo,music,zoom,quick,jump,fix,yes,hello,keen,nova,wifi,gamer,xerox").split(",").concat((window.PSDC_CONTENT&&window.PSDC_CONTENT.games)||[])));
 var HUES=[185,205,265,290,320,150,225];
 var EFONT='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 var KIND={gold:{h:46,e:"⭐"},bomb:{h:2,e:"💣"},ice:{h:192,e:"❄️"},heart:{h:340,e:"❤️"}};
@@ -1321,7 +1327,7 @@ function showGame(n){
  Object.keys(views).forEach(function(k){views[k].hidden=(k!==n)});
  cur=n;
  if(n==="bubble")window.bubbleCtl.enter();else if(n==="shoot")window.shootCtl.enter();else if(n==="race")window.raceCtl.enter();else if(n==="online")window.onlineCtl.enter();
- if(n&&views[n].scrollIntoView)views[n].scrollIntoView({block:"start"});refocus();
+ refocus();
 }
 window.gameKey=function(k){
  if(cur==="bubble")window.bubbleKey(k);else if(cur==="shoot")window.shootKey(k);else if(cur==="race")window.raceKey(k);else if(cur==="online")window.onlineKey(k);
@@ -1332,9 +1338,12 @@ document.querySelectorAll("[data-back]").forEach(function(b){b.addEventListener(
 document.querySelectorAll(".tab").forEach(function(t){t.addEventListener("click",function(){
  var g=t.dataset.tab==="games"||t.dataset.tab==="online";
  document.querySelectorAll(".tab").forEach(function(x){x.classList.toggle("on",x===t)});
- $(".layout").hidden=g;window.GAME_ON=g;
+ var f=t.dataset.tab==="faq";$(".layout").hidden=g||f;$("#about").hidden=!f;window.GAME_ON=g||f;
  if(g){var pb=$("#pause");if(pb&&/^pause/i.test(pb.textContent))pb.click();showGame(t.dataset.tab==="online"?"online":"hub")}
  else{showGame(null);}
  refocus()})});
+document.querySelectorAll(".tab").forEach(function(t){t.addEventListener("click",function(){try{history.replaceState(null,"",t.dataset.tab==="lessons"?location.pathname+location.search:"#"+t.dataset.tab)}catch(e){}})});
+function route(){var h=location.hash.slice(1),t=document.querySelector('.tab[data-tab="'+h+'"]');if(t&&!t.classList.contains("on"))t.click()}
+addEventListener("hashchange",route);addEventListener("DOMContentLoaded",route);
 })();
 })();

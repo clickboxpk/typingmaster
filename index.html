@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Free Typing Practice, Tests & Typing Tutor Software &amp; Multiplayer Typing Race | PSDC</title>
-<meta name="description" content="Learn touch typing with free online lessons, daily practice and a WPM speed test. Track your accuracy and improve your typing speed step by step. PSDC">
+<title>Free Online Typing Test &amp; Typing Master | PSDC</title>
+<meta name="description" content="Free typing lessons, WPM speed test (Easy, Medium, Hard), typing games and live online typing race. Typing seekhein asaan tareeqe se - PSDC Typing Master.">
 <meta name="keywords" content="typing master, free typing test, typing speed test, online typing practice, learn typing, typing lessons, WPM test, typing game, typing race, typing competition, DIT typing, PSDC, typing seekhein, urdu typing tutor">
 <meta name="author" content="PAFWA Skills Development Centre (PSDC), NRK">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
@@ -25,6 +25,8 @@
 <link rel="preload" href="css/style.css" as="style">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/arena.css">
+<link rel="stylesheet" href="css/modern.css">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
 <style>[hidden]{display:none !important}</style>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
@@ -32,7 +34,7 @@
 {"@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"Is PSDC Typing Master free?","acceptedAnswer":{"@type":"Answer","text":"Yes. All lessons, tests, games and the online arena are completely free."}},
 {"@type":"Question","name":"How can I improve my typing speed (WPM)?","acceptedAnswer":{"@type":"Answer","text":"Keep your fingers on the home row, look at the screen, focus on accuracy first and practise 15-20 minutes daily."}},
-{"@type":"Question","name":"How does the online typing competition work?","acceptedAnswer":{"@type":"Answer","text":"Open the Online Arena tab, pick a game style, format and level, then invite online students and race. You can download and share your result image."}}]}]}</script>
+{"@type":"Question","name":"How does the online typing competition work?","acceptedAnswer":{"@type":"Answer","text":"Open the Online Arena tab, pick a game style, format and level, then invite online students and race. You can download and share your result image."}},{"@type":"Question","name":"Typing seekhne ke liye kitna time lagta hai?","acceptedAnswer":{"@type":"Answer","text":"Rozana 20-30 minute practice se aam taur par 4 se 8 hafton me achi speed aa jati hai."}}]}]}</script>
 </head>
 <body>
 <noscript><p style="padding:20px">Please enable JavaScript to use PSDC Typing Master (free online typing tutor and typing test).</p></noscript>
@@ -48,7 +50,7 @@
       <rect x="12" y="47" width="8" height="6" rx="2" fill="#fff" opacity=".85"/><rect x="23" y="47" width="8" height="6" rx="2" fill="#fff" opacity=".85"/><rect x="34" y="47" width="8" height="6" rx="2" fill="#fff" opacity=".85"/><rect x="45" y="47" width="8" height="6" rx="2" fill="#fff" opacity=".85"/>
     </svg>
     <div class="brand-text">
-      <h1>Learn Touch Typing Online – Free Typing Practice & Speed Test</h1>
+      <h1>PAFWA SKILLS DEVELOPMENT CENTRE (PSDC), NRK</h1>
       <p class="sub"><span class="badge">Typing Master</span><span>DIT Beginner Course</span></p>
     </div>
     <input class="nameIn" id="stuName" type="text" placeholder="Student name" maxlength="40" aria-label="Student name">
@@ -56,9 +58,8 @@
     <button class="ghost" id="snd" type="button" aria-pressed="true">Sound on</button>
     <div class="themes" id="themes" role="group" aria-label="Colour theme"></div>
   </header>
-  <div class="tabs" role="tablist"><button class="tab on" data-tab="lessons" type="button">⌨️ Typing Lessons</button><button class="tab" data-tab="games" type="button">🎮 Games</button><button class="tab" data-tab="online" type="button">🌐 Online Arena <span class="new">LIVE</span></button></div>
-  <div class="ad-slot" data-ad="top" aria-label="Advertisement"></div>
-
+  <div class="tabs" role="tablist"><button class="tab on" data-tab="lessons" type="button">⌨️ Typing Lessons</button><button class="tab" data-tab="games" type="button">🎮 Games</button><button class="tab" data-tab="online" type="button">🌐 Online Arena <span class="new">LIVE</span></button><button class="tab" data-tab="faq" type="button">❓ FAQ &amp; Guide</button></div>
+  
   <div class="layout">
     <nav class="lessons" id="lessons" aria-label="Lessons"></nav>
 
@@ -215,12 +216,7 @@
 <div class="garena"><canvas id="gCv"></canvas><div class="gban" id="gBan"></div><div id="gOv"></div></div>
 <div class="gtip">Bubble ka letter type karo · Esc = pause · Jo bubble upar nikal gaya, us se tears jar me bharte hain!</div></section>
 <section id="onlineView" hidden aria-label="Online typing competition"></section>
-</div>
-<input id="cap" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Typing input">
-<div id="fx"></div>
-<div id="sheet"></div>
-
-<main class="seo-info" id="about">
+<main class="seo-info" id="about" hidden>
 <h2>Free Online Typing Master - Learn English Typing &amp; Take Typing Tests</h2>
 <p>PSDC Typing Master is a free typing tutor made by PAFWA Skills Development Centre (PSDC), NRK for DIT students and beginners. Learn touch typing step by step - home row, top row, bottom row, numbers, common words and full sentences - with an on-screen keyboard, finger guide, live WPM and accuracy. Typing seekhna ab asaan hai: bilkul free, bina login ke.</p>
 <h2>What you can do on this website</h2>
@@ -238,10 +234,17 @@
 <footer>&copy; PAFWA Skills Development Centre (PSDC), NRK &middot; Developed by Hidayat Khan</footer>
 </main>
 <div class="ad-slot" data-ad="bottom" aria-label="Advertisement"></div>
+</div>
+<input id="cap" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Typing input">
+<div id="fx"></div>
+<div id="sheet"></div>
+
 
 <script src="js/config.js" defer></script>
+<script src="js/content.js" defer></script>
 <script src="js/app.js" defer></script>
 <script src="js/multiplayer.js" defer></script>
 <script src="js/ads.js" defer></script>
+<script src="js/fit.js" defer></script>
 </body>
 </html>

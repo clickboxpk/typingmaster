@@ -1,0 +1,125 @@
+/* PSDC Typing Master - modern layer: compact, one-screen, no page scroll */
+html,body{height:100%}
+body{margin:0;padding:0;overflow:hidden;overscroll-behavior:none}
+.app{box-sizing:border-box;height:100dvh;max-width:1280px;margin:0 auto;padding:6px 10px;gap:6px;grid-template-rows:auto auto minmax(0,1fr) auto}
+.app>.layout,.app>section,.app>main{grid-row:3;min-height:0;min-width:0;overflow:hidden;position:relative}
+.app>.ad-slot{grid-row:4;margin:0 auto}
+.ad-slot.on{max-height:92px;overflow:hidden}
+/* auto-fit wrapper (js/fit.js sets --z so content always fits the screen) */
+.fit{width:calc(100%/var(--z,1));height:calc(100%/var(--z,1));transform:scale(var(--z,1));transform-origin:0 0}
+
+/* Header: one compact row */
+.brand{flex-wrap:nowrap;gap:8px}
+.brand .logo{width:32px;height:32px;flex:none}
+.brand-text{flex:1 1 0;min-width:0}
+.brand h1{margin:0;line-height:1.1;font-size:clamp(10px,2.3cqw,20px)}
+.brand .sub{margin:2px 0 0;gap:8px;font-size:11px}.badge{padding:2px 9px;font-size:10px}
+.nameIn{width:130px;padding:5px 12px;font-size:13px}
+.ghost{padding:5px 11px;font-size:12px}
+.themes{gap:5px;flex-wrap:nowrap}.sw{width:20px;height:20px}
+@media (max-width:760px){.brand{flex-wrap:wrap}.brand-text{flex-basis:calc(100% - 44px)}.nameIn{width:110px}.brand .sub span:last-child{display:none}}
+
+/* Tabs */
+.tabs{container-type:inline-size;gap:5px;flex-wrap:nowrap;padding:1px}
+.tab{flex:0 0 auto;padding:6px clamp(10px,2cqw,18px);font-size:13px;transition:transform .2s,box-shadow .2s}
+.tab:hover{transform:translateY(-1px)}
+.tab:focus-visible,.lesson:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 60%,transparent);outline-offset:2px}
+
+/* Lessons: compact number chips instead of a long list */
+.layout{gap:8px;align-items:stretch;grid-template-rows:minmax(0,1fr)}
+@media (min-width:960px){.layout{grid-template-columns:176px minmax(0,1fr)}.lessons{align-content:start}}
+@media (max-width:959px){.layout{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}}
+.lessons{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:5px;overflow:visible;padding:0}
+.lesson{height:34px;min-width:0;padding:0;display:grid;place-items:center;border-radius:10px;transition:transform .15s}
+.lesson:hover{transform:translateY(-2px)}
+.lesson .t,.lesson .st{display:none}
+.lesson .n{width:100%;height:100%;background:transparent;border-radius:10px;font-size:12px}
+.lesson.test .n{color:var(--accent)}
+
+/* Typing window fills the free height */
+.window{display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden;border-radius:18px;
+  background:color-mix(in srgb,var(--panel) 86%,transparent);backdrop-filter:blur(14px) saturate(1.2)}
+.titlebar{flex:none;padding:6px 14px}.titlebar .tt{font-size:15px}
+.work{flex:1;min-height:0}
+@media (min-width:780px){.work{grid-template-columns:minmax(0,1fr) 270px}}
+.main{padding:8px 12px 6px;gap:6px;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.prompt{flex:1;min-height:0;gap:8px}
+.intro{gap:6px}.intro .lead{font-size:clamp(14px,2vw,17px)}
+.intro:has(.para){width:100%;height:100%;grid-template-rows:auto minmax(0,1fr);justify-items:stretch}
+.para{max-height:none;min-height:0;overflow:hidden;line-height:1.7}
+.fl{min-height:16px;font-size:14px}
+.kb{flex:none;width:min(100%,calc((100dvh - 310px)*2.7));margin-inline:auto;padding:6px;gap:3px}
+.row{gap:3px}
+#hands{display:none}
+@media (min-height:900px){#hands{display:block;max-width:min(560px,32dvh*2.2)}}
+.wfoot{flex:none;padding:4px 12px}.wfoot .tip{font-size:11px}
+
+/* Side panel: 2 columns, compact */
+.side{padding:8px 10px;gap:6px 10px;grid-template-columns:1fr 1fr;overflow:hidden;background:color-mix(in srgb,var(--panel-2,var(--panel)) 80%,transparent)}
+.side>.pet,.side>.mini,.side>.actions{grid-column:1/-1}
+.pet{padding:6px}#cat{max-height:clamp(56px,13dvh,140px)}.pet-top b{font-size:13px}
+@media (max-height:720px){.pet{display:none}}
+.pie svg{width:54px;height:54px}.pie .pct{font-size:17px}
+.bars{height:34px;padding:3px}
+.time b{font-size:22px}.mini b{font-size:15px}.stp button{width:28px;height:28px}.stp b{font-size:15px}
+.actions .btn{padding:8px 6px}
+@media (max-width:779px){.side{grid-template-columns:repeat(3,1fr)}.side>.pet,.side>.pie,.side>div:nth-of-type(2){display:none}}
+@media (max-width:600px),(max-height:520px){.kb,#hands{display:none}}
+
+/* Games: hub + arenas fill the view */
+#gamesHub{display:flex;flex-direction:column}
+.hubhead h2{margin:0;font-size:18px}.hubhead p{margin:2px 0 6px;font-size:12px}
+.hubgrid{flex:1;min-height:0;gap:10px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.gcard .art{height:clamp(70px,17dvh,140px)}.gcard .gb{padding:8px 12px 12px;gap:5px}.gcard p{font-size:12px}
+.gcard.soon{min-height:0}
+#gameView:not([hidden]),#shootView:not([hidden]),#raceView:not([hidden]){display:flex;flex-direction:column}
+.garena,.sarena,.rarena{flex:1;height:auto;min-height:0}
+.ghud{padding:4px 8px;gap:8px}.gtip{padding:2px 8px;font-size:11px}.rtype{padding:6px 12px}
+
+/* FAQ & Guide: two columns */
+.seo-info{max-width:none;margin:0;padding:8px 16px;columns:2 340px;column-gap:28px;background:color-mix(in srgb,var(--panel) 70%,transparent);border-radius:18px;line-height:1.5;font-size:14px}
+.seo-info h2{font-size:16px;margin:8px 0 4px;break-after:avoid}.seo-info details{break-inside:avoid;margin:5px 0;padding:6px 12px}
+.seo-info footer{column-span:all;margin:8px 0 0}
+
+.pc.cur.shake,.ch.cur.shake{background:var(--wrong)!important;color:#fff!important;border-radius:4px}
+@media print{body{overflow:visible}.app{height:auto}.fit{transform:none;width:auto;height:auto}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* ---------- Online Arena: modern look (CSS only, Firebase logic untouched) ---------- */
+#onlineView{max-width:1100px;padding:4px 6px 24px}
+.ar-head{padding:14px 18px;border-radius:20px;border:1px solid var(--tile-line);background:linear-gradient(135deg,color-mix(in srgb,var(--frame) 16%,var(--tile)),var(--tile))}
+.ar-head h2{font-size:clamp(20px,3vw,28px)}
+.ar-chip{backdrop-filter:blur(8px);box-shadow:var(--shadow)}
+.ar-grid{gap:clamp(10px,1.5vw,16px)}
+.ar-card{border-radius:22px;background:color-mix(in srgb,var(--tile) 88%,transparent);backdrop-filter:blur(12px);transition:transform .2s,box-shadow .2s}
+.ar-card:hover{transform:translateY(-2px)}
+.ar-note{border-radius:14px}
+.ar-seg{gap:8px}
+.ar-seg button{border-radius:14px;transition:transform .15s,border-color .15s,box-shadow .15s}
+.ar-seg button:hover:not(:disabled):not(.on){border-color:var(--accent);transform:translateY(-1px)}
+.ar-seg button.on{box-shadow:0 8px 18px -8px var(--frame)}
+.ar-pl{transition:background .15s}
+.av{box-shadow:0 4px 10px -4px rgba(0,0,0,.4)}
+.ar-hud div{border-radius:16px;backdrop-filter:blur(8px)}
+.ar-arena{border-radius:22px;box-shadow:0 22px 40px -24px var(--frame)}
+.ar-lane .trk{height:14px}
+.ar-typebox{border-radius:22px;background:color-mix(in srgb,var(--tile) 90%,transparent);backdrop-filter:blur(10px)}
+.ar-text{font-family:ui-monospace,"Cascadia Code","SF Mono","Courier New",monospace;font-size:clamp(18px,2.6vw,26px)}
+.ar-table{border-radius:18px;box-shadow:var(--shadow)}
+.ar-table tbody tr{transition:background .15s}
+.ar-table tbody tr:hover td{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+.ar-pod .bar{border-radius:16px 16px 0 0;box-shadow:0 14px 24px -14px rgba(0,0,0,.5)}
+.ar-invc{border-radius:18px;backdrop-filter:blur(12px)}
+
+/* ---------- phone / short-screen fixes ---------- */
+.app{grid-template-columns:minmax(0,1fr)}
+.brand,.tabs{min-width:0}
+@media (max-width:640px){
+  .tabs{flex-wrap:wrap}.tab{flex:1 1 auto;padding:6px 8px;font-size:12px;text-align:center}.tab .new{display:none}
+  .gcard .art,.gcard p,.gcard.soon{display:none}.hubgrid{grid-template-columns:1fr;align-content:start}.gcard .gb{padding:10px 12px}
+  .hubhead p{display:none}
+}
+@media (max-height:760px){.gcard.soon{display:none}.ar-card:has(.ar-hist){display:none}.ar-head p{display:none}.gcard .art{height:70px}}
+@media (max-height:620px){.gcard p{display:none}}
+
+.fit-scroll{overflow:auto!important;scrollbar-width:thin}
