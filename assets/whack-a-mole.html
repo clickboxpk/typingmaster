@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Whack-A-Mole</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html,body{margin:0;height:100%;overflow:hidden}
+body{font-family:"Comic Sans MS","Chalkboard SE","Trebuchet MS",sans-serif;color:#fff;background:linear-gradient(#6cc8ff 0,#c9f1ff 30%,#8be05a 30%,#3da838 100%);cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text y='32' font-size='32'>🔨</text></svg>") 6 6,pointer}
+#bg{position:fixed;inset:0;pointer-events:none;font-size:clamp(24px,5vw,46px)}
+#bg span{position:absolute}
+.cloud{position:absolute;background:#fff;border-radius:50px;opacity:.9;height:28px;width:90px;animation:drift 40s linear infinite}
+.cloud:before{content:"";position:absolute;background:#fff;border-radius:50%;width:44px;height:44px;top:-20px;left:14px}
+@keyframes drift{from{transform:translateX(-120px)}to{transform:translateX(110vw)}}
+.btn{font:inherit;font-size:1.15rem;font-weight:700;color:#fff;background:linear-gradient(#ffb02e,#ff7a00);border:0;border-bottom:5px solid #b84f00;border-radius:999px;padding:10px 26px;min-height:48px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.25);text-shadow:0 2px 0 rgba(0,0,0,.25)}
+.btn:active{transform:translateY(3px);border-bottom-width:2px}
+.btn.g{background:linear-gradient(#5be35b,#1fae2b);border-bottom-color:#12741c}
+.btn.b{background:linear-gradient(#5cc2ff,#1a7de0);border-bottom-color:#0e55a0}
+.btn.r{background:linear-gradient(#ff7a7a,#e02020);border-bottom-color:#8f1111}
+.btn.sm{padding:6px 14px;font-size:.95rem;min-height:44px}
+.btn.off{filter:grayscale(1)}
+.screen{position:fixed;inset:0;display:none;padding:12px;overflow:auto;z-index:20}
+.screen.show{display:flex}
+#pause,#over{background:rgba(20,50,20,.65)}
+.card{background:rgba(255,252,240,.96);color:#4a2a0c;border:6px solid #8b5a2b;border-radius:26px;padding:16px 20px;max-width:540px;width:100%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35);margin:auto}
+h1{margin:0;font-size:clamp(2rem,8vw,3.4rem);color:#ffd23f;-webkit-text-stroke:2px #7a3f0a;text-shadow:0 5px 0 #7a3f0a,0 8px 14px rgba(0,0,0,.35);letter-spacing:1px}
+.sub{font-weight:700;color:#d2530b;margin:6px 0 8px;font-size:clamp(.8rem,3vw,1rem)}
+.hero{width:110px;height:110px;margin:0 auto;animation:bob 1.2s ease-in-out infinite}
+.hero svg{width:100%;height:100%}
+@keyframes bob{50%{transform:translateY(-8px) rotate(4deg)}}
+.how{text-align:left;font-size:.88rem;background:#fff1c9;border-radius:14px;padding:8px 12px;margin:8px 0}
+.how div{margin:2px 0}
+.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.seg{font:inherit;font-weight:700;border:3px solid #8b5a2b;background:#fff;color:#8b5a2b;border-radius:999px;padding:6px 16px;min-height:44px;cursor:pointer}
+.seg.on{background:#ff8a00;color:#fff}
+.rec{font-size:.9rem;font-weight:700;color:#6b4423;margin:4px 0}
+.rec b{color:#d2530b;font-size:1.2rem}
+#game{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:6px}
+#game.show{display:flex}
+.bar{display:flex;align-items:center;gap:10px;width:min(96vw,760px);justify-content:space-between;flex-wrap:wrap}
+.timer{min-width:76px;height:76px;border-radius:50%;background:#3b2410;border:5px solid #ffd23f;display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:900;color:#ffd23f;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.timer.low{background:#d31919;color:#fff;border-color:#fff;animation:pulse .5s infinite alternate}
+@keyframes pulse{to{transform:scale(1.15)}}
+.ctrl{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.hud{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;width:min(96vw,760px)}
+.chip{background:rgba(60,35,10,.85);border:3px solid #ffd23f;border-radius:14px;padding:4px 4px;text-align:center;font-size:.72rem;line-height:1.1}
+.chip b{display:block;font-size:1.35rem;color:#ffd23f}
+@media(max-width:520px){.hud{grid-template-columns:repeat(3,1fr)}.timer{min-width:64px;height:64px;font-size:2rem}}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:2%;width:min(94vw,max(240px,calc(100vh - 270px)),540px);padding:2.5%;background:rgba(88,170,50,.55);border:5px solid #2f7d22;border-radius:26px;touch-action:manipulation}
+.board.shake{animation:shake .4s}
+@keyframes shake{20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-8px)}80%{transform:translateX(8px)}}
+.hole{position:relative;aspect-ratio:1/1}
+.dirt{position:absolute;left:2%;right:2%;bottom:10%;height:38%;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,#150a03 40%,#3a1f0b 100%);border:6px solid #9a6a33;box-shadow:0 5px 0 #6b4220,0 8px 8px rgba(0,0,0,.3)}
+.clip{position:absolute;left:10%;right:10%;top:0;height:72%;overflow:hidden;z-index:2}
+.mole{position:absolute;left:0;right:0;bottom:0;height:92%;transform:translateY(105%);transition:transform .18s cubic-bezier(.3,1.5,.5,1)}
+.mole svg{width:100%;height:100%;display:block}
+.hole.up .mole{transform:none}
+.hole.fast .mole{transition-duration:.08s}
+.hole.bonk .mole{transform:translateY(105%) rotate(14deg);transition-duration:.15s}
+.front{position:absolute;left:3%;right:3%;bottom:10%;height:19%;border-radius:0 0 50% 50%/0 0 100% 100%;background:linear-gradient(#8a5a2b,#5e3a18);z-index:3;pointer-events:none}
+.pop{position:fixed;z-index:50;pointer-events:none;font-weight:900;font-size:1.7rem;text-shadow:0 2px 0 #000,0 0 6px #000;animation:fl .9s ease-out forwards;transform:translate(-50%,-50%)}
+@keyframes fl{to{transform:translate(-50%,-190%);opacity:0}}
+.pt{position:fixed;z-index:49;pointer-events:none;font-size:1.1rem;animation:bu .6s ease-out forwards}
+@keyframes bu{to{transform:translate(var(--dx),var(--dy)) scale(.3) rotate(240deg);opacity:0}}
+#banner{position:fixed;left:50%;top:38%;z-index:60;transform:translate(-50%,-50%);font-size:clamp(1.8rem,8vw,3.6rem);font-weight:900;color:#ffe14d;text-shadow:0 4px 0 #b34700,0 0 18px #000;pointer-events:none;opacity:0;white-space:nowrap}
+#banner.go{animation:ban 1.2s forwards}
+#banner.bad{color:#ff4040;text-shadow:0 4px 0 #500,0 0 18px #000}
+@keyframes ban{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-90%) scale(1)}}
+#flash{position:fixed;inset:0;background:#f00;opacity:0;pointer-events:none;z-index:40}
+#flash.go{animation:fo .5s}
+@keyframes fo{30%{opacity:.4}to{opacity:0}}
+.rating{font-size:2rem;font-weight:900;color:#e0670a;margin:4px 0}
+.msg{font-weight:700;margin:4px 0 10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.st{background:#fff1c9;border-radius:12px;padding:6px;font-size:.85rem}
+.st b{display:block;font-size:1.4rem;color:#d2530b}
+.st:last-child{grid-column:1/-1}
+#new{color:#1fae2b;font-weight:900;min-height:1.4em}
+@media print{body>*:not(#over){display:none!important}body{background:#fff}#over{display:flex!important;position:static;background:#fff}.card{box-shadow:none}.noprint{display:none!important}}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true">
+<div class="cloud" style="top:6%;animation-delay:-5s"></div><div class="cloud" style="top:14%;animation-delay:-22s;width:70px"></div>
+<span style="left:3%;top:24%">🌳</span><span style="right:3%;top:22%">🌳</span>
+<span style="left:6%;bottom:8%">🌼</span><span style="right:6%;bottom:6%">🌷</span><span style="left:48%;bottom:2%">🍄</span><span style="right:20%;top:34%">🦋</span>
+</div>
+
+<div id="start" class="screen show"><div class="card">
+<h1>WHACK-A-MOLE</h1>
+<div class="sub">QUICK EYES. FAST HANDS. BIG SCORES!</div>
+<div class="hero" id="hero"></div>
+<div class="how">
+<div>🖱️ Click or tap the characters before they hide!</div>
+<div>🟤 Mole <b>+10</b> &nbsp; 🟡 Golden <b>+50</b> &nbsp; 🔵 Speed <b>+20</b> &nbsp; 💣 Bomb <b>-20</b></div>
+<div>🎯 Hit 5 in a row for a COMBO bonus. Clicking empty holes counts as a miss.</div>
+<div>⏱️ You have 60 seconds. Press P to pause.</div>
+</div>
+<div class="row" id="diffs"><button class="seg" data-d="easy">EASY</button><button class="seg" data-d="normal">NORMAL</button><button class="seg" data-d="hard">HARD</button></div>
+<div class="rec">🏆 Best Score: <b id="sBest">0</b></div>
+<div class="rec" id="sRec"></div>
+<div class="row"><button class="btn g" id="play">▶ PLAY GAME</button></div>
+<div class="row"><button class="btn b sm" id="sndS">🔊 Sound: ON</button><button class="btn r sm" id="resetRec">Reset Records</button></div>
+</div></div>
+
+<div id="game">
+<div class="bar">
+<div class="timer" id="timer">60</div>
+<div class="ctrl"><button class="btn b sm" id="pauseB">⏸ Pause</button><button class="btn g sm" id="restartB">↻ Restart</button><button class="btn r sm" id="menuB">⌂ Menu</button><button class="btn sm" id="sndG">🔊</button></div>
+</div>
+<div class="hud">
+<div class="chip">SCORE<b id="hScore">0</b></div><div class="chip">HITS<b id="hHits">0</b></div><div class="chip">MISSED<b id="hMiss">0</b></div><div class="chip">ACCURACY<b id="hAcc">0%</b></div><div class="chip">BEST<b id="hBest">0</b></div>
+</div>
+<div class="board" id="board"></div>
+</div>
+
+<div id="pause" class="screen"><div class="card"><h1 style="font-size:2.4rem">PAUSED</h1>
+<div class="row"><button class="btn g" id="resumeB">▶ Resume</button></div>
+<div class="row"><button class="btn b" id="restartP">↻ Restart</button><button class="btn r" id="menuP">⌂ Main Menu</button></div></div></div>
+
+<div id="over" class="screen"><div class="card">
+<h1 style="font-size:2.2rem">GAME OVER</h1>
+<div class="rating" id="oRating"></div>
+<div class="msg" id="oMsg"></div>
+<div id="new"></div>
+<div class="stats">
+<div class="st">Final Score<b id="oScore"></b></div><div class="st">Successful Hits<b id="oHits"></b></div>
+<div class="st">Missed Clicks<b id="oMiss"></b></div><div class="st">Accuracy<b id="oAcc"></b></div>
+<div class="st">Golden Moles Hit<b id="oGold"></b></div><div class="st">Best Combo<b id="oCombo"></b></div>
+<div class="st">Personal Best Score<b id="oBest"></b></div>
+</div>
+<div class="rec" id="oDate"></div>
+<div class="row noprint"><button class="btn g" id="again">▶ Play Again</button><button class="btn b" id="menuO">⌂ Main Menu</button><button class="btn" id="printB">🖨 Print Results</button></div>
+</div></div>
+
+<div id="banner"></div><div id="flash"></div>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+function M(body,belly,st,x){
+ var s=' stroke="'+st+'" stroke-width="3"';
+ return '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="64" rx="38" ry="36" fill="'+body+'"'+s+'/><circle cx="20" cy="32" r="10" fill="'+body+'"'+s+'/><circle cx="80" cy="32" r="10" fill="'+body+'"'+s+'/><ellipse cx="50" cy="70" rx="24" ry="19" fill="'+belly+'"/><ellipse cx="50" cy="58" rx="10" ry="7" fill="#ff6f91" stroke="#b03a5b" stroke-width="2"/><circle cx="34" cy="44" r="8" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="66" cy="44" r="8" fill="#fff" stroke="#222" stroke-width="2"/><circle cx="36" cy="45" r="4" fill="#222"/><circle cx="64" cy="45" r="4" fill="#222"/><path d="M40 68q10 8 20 0" fill="none" stroke="#5a2d12" stroke-width="2.5" stroke-linecap="round"/><rect x="44" y="72" width="12" height="11" rx="2" fill="#fff" stroke="#555" stroke-width="1.5"/>'+(x||'')+'</svg>';
+}
+var BOMB='<svg viewBox="0 0 100 100"><path d="M54 26q4-18 24-12" fill="none" stroke="#8b5a2b" stroke-width="5" stroke-linecap="round"/><text x="72" y="18" font-size="20">💥</text><rect x="42" y="22" width="16" height="10" rx="2" fill="#555"/><circle cx="50" cy="62" r="34" fill="#222" stroke="#000" stroke-width="3"/><ellipse cx="36" cy="46" rx="9" ry="5" fill="#fff" opacity=".35"/><path d="M26 46l18 8M74 46l-18 8" stroke="#ff3b3b" stroke-width="5" stroke-linecap="round"/><circle cx="37" cy="60" r="5" fill="#ff3b3b"/><circle cx="63" cy="60" r="5" fill="#ff3b3b"/><path d="M36 80q14-10 28 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>';
+var T={
+ normal:{pts:10,w:58,svg:M('#9a6232','#e8c49a','#5a3412')},
+ golden:{pts:50,w:9,svg:M('#ffd21f','#fff1a8','#b8860b','<path d="M28 20l6-14 8 9 8-13 8 13 8-9 6 14z" fill="#ffec6e" stroke="#b8860b" stroke-width="2"/><text x="78" y="26" font-size="16">✨</text>')},
+ speed:{pts:20,w:18,fast:1,svg:M('#27c4c4','#c8fbff','#0c7a7a','<rect x="20" y="34" width="60" height="20" rx="10" fill="rgba(255,255,255,.3)" stroke="#ff4d8d" stroke-width="4"/><ellipse cx="50" cy="86" rx="5" ry="6" fill="#ff5c7a"/><path d="M90 52l-10 14h8l-6 14 14-18h-8z" fill="#ffe14d" stroke="#d98a00" stroke-width="1.5"/>')},
+ bomb:{pts:-20,w:15,svg:BOMB}
+};
+var CFG={easy:{spawn:1100,up:1700,max:2},normal:{spawn:800,up:1200,max:2},hard:{spawn:520,up:800,max:3}};
+var DEF={best:0,games:0,acc:0,combo:0};
+var pref={diff:'normal',sound:true},rec=Object.assign({},DEF);
+try{Object.assign(pref,JSON.parse(localStorage.getItem('wam_pref')||'{}'))}catch(e){}
+try{Object.assign(rec,JSON.parse(localStorage.getItem('wam_rec')||'{}'))}catch(e){}
+if(!CFG[pref.diff])pref.diff='normal';
+function savePref(){try{localStorage.setItem('wam_pref',JSON.stringify(pref))}catch(e){}}
+function saveRec(){try{localStorage.setItem('wam_rec',JSON.stringify(rec))}catch(e){}}
+
+/* ---------- audio ---------- */
+var AC=null;
+function initAudio(){
+ try{if(!AC){var C=window.AudioContext||window.webkitAudioContext;if(C)AC=new C();}if(AC&&AC.state==='suspended')AC.resume();}catch(e){}
+}
+function tone(f,d,type,v,to,delay){
+ if(!pref.sound||!AC)return;
+ try{
+  var t=AC.currentTime+(delay||0),o=AC.createOscillator(),g=AC.createGain();
+  o.type=type||'sine';o.frequency.setValueAtTime(f,t);
+  if(to)o.frequency.exponentialRampToValueAtTime(to,t+d);
+  g.gain.setValueAtTime(v||.15,t);g.gain.exponentialRampToValueAtTime(.001,t+d);
+  o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.03);
+ }catch(e){}
+}
+function seq(a,d,type,v,gap){a.forEach(function(f,i){tone(f,d,type,v,null,i*gap)})}
+var snd={
+ pop:function(){tone(300,.08,'sine',.08,650)},
+ hit:function(){tone(520,.1,'square',.1,900);tone(220,.12,'triangle',.15,80)},
+ gold:function(){seq([660,880,1100,1320],.15,'triangle',.14,.07)},
+ bomb:function(){tone(160,.5,'sawtooth',.18,40);tone(90,.5,'square',.1,30)},
+ miss:function(){tone(180,.12,'square',.07,110)},
+ warn:function(){tone(950,.08,'square',.08)},
+ combo:function(){seq([523,659,784,1047],.12,'triangle',.14,.08)},
+ over:function(){seq([523,440,349,262],.28,'triangle',.16,.22)}
+};
+
+/* ---------- state ---------- */
+var holes=[],cfg=CFG[pref.diff],running=false,paused=false,raf=0,last=0,timeLeft=60,spawnIn=0,lastHole=-1,lastSec=-1;
+var score=0,hits=0,miss=0,combo=0,bestCombo=0,golds=0;
+var board=$('board');
+for(var i=0;i<9;i++){
+ var el=document.createElement('div');el.className='hole';el.dataset.i=i;
+ el.innerHTML='<div class="dirt"></div><div class="clip"><div class="mole"></div></div><div class="front"></div>';
+ board.appendChild(el);
+ holes.push({i:i,el:el,mole:el.querySelector('.mole'),up:false,life:0,cool:0,type:null});
+}
+$('hero').innerHTML=T.normal.svg;
+
+/* ---------- ui helpers ---------- */
+function show(id){['start','pause','over'].forEach(function(s){$(s).classList.toggle('show',s===id)});$('game').classList.toggle('show',id==='game'||id==='pause')}
+function acc(){var n=hits+miss;return n?Math.round(hits/n*100):0}
+function render(){
+ $('hScore').textContent=score;$('hHits').textContent=hits;$('hMiss').textContent=miss;
+ $('hAcc').textContent=acc()+'%';$('hBest').textContent=Math.max(rec.best,score);
+}
+function refreshStart(){
+ $('sBest').textContent=rec.best;
+ $('sRec').textContent='Games played: '+rec.games+'  |  Best accuracy: '+rec.acc+'%  |  Best combo: '+rec.combo;
+ Array.prototype.forEach.call(document.querySelectorAll('#diffs .seg'),function(b){b.classList.toggle('on',b.dataset.d===pref.diff)});
+ sndLabel();
+}
+function sndLabel(){
+ $('sndS').textContent=pref.sound?'🔊 Sound: ON':'🔇 Sound: OFF';
+ $('sndG').textContent=pref.sound?'🔊':'🔇';
+ $('sndS').classList.toggle('off',!pref.sound);$('sndG').classList.toggle('off',!pref.sound);
+}
+function pop(txt,x,y,color){
+ var d=document.createElement('div');d.className='pop';d.textContent=txt;d.style.left=x+'px';d.style.top=y+'px';d.style.color=color;
+ document.body.appendChild(d);setTimeout(function(){d.remove()},1000);
+}
+function burst(x,y,chars){
+ for(var i=0;i<8;i++){
+  var p=document.createElement('div'),a=i/8*6.283+Math.random()*.5,r=40+Math.random()*40;
+  p.className='pt';p.textContent=chars[i%chars.length];p.style.left=x+'px';p.style.top=y+'px';
+  p.style.setProperty('--dx',Math.cos(a)*r+'px');p.style.setProperty('--dy',Math.sin(a)*r+'px');
+  document.body.appendChild(p);setTimeout(function(q){q.remove()},700,p);
+ }
+}
+function banner(txt,bad){
+ var b=$('banner');b.textContent=txt;b.className=bad?'bad':'';void b.offsetWidth;b.classList.add('go');
+}
+
+/* ---------- gameplay ---------- */
+function showMole(h,k){
+ h.up=true;h.type=k;h.life=cfg.up*(T[k].fast?.55:1);
+ h.mole.innerHTML=T[k].svg;
+ h.el.classList.remove('bonk');h.el.classList.toggle('fast',!!T[k].fast);h.el.classList.add('up');
+ snd.pop();
+}
+function hideMole(h,bonk){
+ h.up=false;h.cool=350;h.el.classList.remove('up');
+ if(bonk)h.el.classList.add('bonk');
+}
+function spawn(){
+ var act=holes.filter(function(h){return h.up}).length;
+ if(act>=cfg.max)return;
+ var free=holes.filter(function(h){return !h.up&&h.cool<=0&&h.i!==lastHole});
+ if(!free.length)return;
+ var h=free[Math.random()*free.length|0];lastHole=h.i;
+ var r=Math.random()*100,k='normal';
+ for(var n in T){r-=T[n].w;if(r<0){k=n;break}}
+ showMole(h,k);
+}
+function resetState(){
+ score=hits=miss=combo=bestCombo=golds=0;timeLeft=60;lastSec=-1;lastHole=-1;spawnIn=400;
+ cfg=CFG[pref.diff];
+ holes.forEach(function(h){h.up=false;h.cool=0;h.el.classList.remove('up','bonk','fast')});
+ $('timer').textContent=60;$('timer').classList.remove('low');
+ $('banner').className='';
+}
+function stopLoop(){running=false;paused=false;cancelAnimationFrame(raf);raf=0}
+function startGame(){
+ initAudio();stopLoop();resetState();render();show('game');
+ running=true;last=performance.now();raf=requestAnimationFrame(frame);
+}
+function frame(now){
+ if(!running)return;
+ raf=requestAnimationFrame(frame);
+ var dt=Math.min(now-last,100);last=now;
+ if(paused)return;
+ timeLeft-=dt/1000;
+ var sec=Math.max(0,Math.ceil(timeLeft));
+ if(sec!==lastSec){
+  lastSec=sec;$('timer').textContent=sec;
+  var low=sec<10;$('timer').classList.toggle('low',low);
+  if(low&&sec>0)snd.warn();
+ }
+ if(timeLeft<=0){endGame();return}
+ spawnIn-=dt;
+ if(spawnIn<=0){spawn();spawnIn=cfg.spawn*(.7+Math.random()*.6)}
+ for(var i=0;i<9;i++){
+  var h=holes[i];
+  if(h.up){h.life-=dt;if(h.life<=0)hideMole(h,false)}
+  else if(h.cool>0)h.cool-=dt;
+ }
+}
+function wrong(x,y,bomb){
+ miss++;combo=0;
+ if(!bomb){snd.miss();pop('MISS',x,y,'#ccc')}
+ render();
+}
+board.addEventListener('pointerdown',function(e){
+ var el=e.target.closest('.hole');
+ if(!el||!running||paused)return;
+ e.preventDefault();
+ var h=holes[+el.dataset.i],x=e.clientX,y=e.clientY;
+ if(!h.up){wrong(x,y,false);return}
+ var t=T[h.type],k=h.type;
+ hideMole(h,true); /* state cleared first: no double scoring */
+ if(k==='bomb'){
+  var lost=Math.min(20,score);score-=lost;
+  wrong(x,y,true);snd.bomb();pop('-20 BOOM!',x,y,'#ff5050');burst(x,y,['💥','🔥','💨']);
+  banner('⚠ BOMB! -20',true);
+  board.classList.remove('shake');void board.offsetWidth;board.classList.add('shake');
+  $('flash').classList.remove('go');void $('flash').offsetWidth;$('flash').classList.add('go');
+ }else{
+  hits++;combo++;score+=t.pts;if(combo>bestCombo)bestCombo=combo;
+  if(k==='golden'){golds++;snd.gold();burst(x,y,['⭐','✨','🌟'])}else{snd.hit();burst(x,y,['⭐','💫'])}
+  pop('+'+t.pts,x,y,k==='golden'?'#ffe14d':'#7dff7d');
+  if(combo%5===0){score+=25;banner(combo+' HIT COMBO! +25');snd.combo()}
+  render();
+ }
+ spawnIn=Math.min(spawnIn,250);
+ render();
+});
+function endGame(){
+ stopLoop();
+ holes.forEach(function(h){hideMole(h,false)});
+ var a=acc(),isNew=score>rec.best;
+ rec.games++;if(score>rec.best)rec.best=score;if(a>rec.acc)rec.acc=a;if(bestCombo>rec.combo)rec.combo=bestCombo;
+ saveRec();snd.over();
+ var rt,ms;
+ if(a>=90){rt='Excellent!';ms='Amazing aim! You are a true Whack-A-Mole champion!'}
+ else if(a>=75){rt='Very Good!';ms='Great job! A little more focus and you will be unstoppable.'}
+ else if(a>=50){rt='Good Effort!';ms='Nice try! Watch the holes closely and avoid the bombs.'}
+ else{rt='Keep Practicing!';ms='Every champion starts somewhere. Try again and aim carefully!'}
+ $('oRating').textContent=rt;$('oMsg').textContent=ms;
+ $('new').textContent=isNew&&score>0?'🎉 NEW BEST SCORE! 🎉':'';
+ $('oScore').textContent=score;$('oHits').textContent=hits;$('oMiss').textContent=miss;
+ $('oAcc').textContent=a+'%';$('oGold').textContent=golds;$('oCombo').textContent=bestCombo;$('oBest').textContent=rec.best;
+ $('oDate').textContent='Whack-A-Mole ('+pref.diff.toUpperCase()+') - '+new Date().toLocaleString();
+ render();show('over');
+}
+function pauseGame(){if(!running||paused)return;paused=true;show('pause')}
+function resumeGame(){if(!running||!paused)return;paused=false;last=performance.now();show('game')}
+function toMenu(){stopLoop();resetState();refreshStart();show('start')}
+
+/* ---------- buttons ---------- */
+$('play').onclick=startGame;$('again').onclick=startGame;$('restartB').onclick=startGame;$('restartP').onclick=startGame;
+$('pauseB').onclick=pauseGame;$('resumeB').onclick=resumeGame;
+$('menuB').onclick=toMenu;$('menuP').onclick=toMenu;$('menuO').onclick=toMenu;
+$('printB').onclick=function(){window.print()};
+function toggleSnd(){initAudio();pref.sound=!pref.sound;savePref();sndLabel();if(pref.sound)snd.pop()}
+$('sndS').onclick=toggleSnd;$('sndG').onclick=toggleSnd;
+$('resetRec').onclick=function(){
+ if(confirm('Reset all saved records? This cannot be undone.')){rec=Object.assign({},DEF);saveRec();refreshStart()}
+};
+$('diffs').addEventListener('click',function(e){
+ var b=e.target.closest('.seg');if(!b)return;pref.diff=b.dataset.d;savePref();refreshStart();
+});
+document.addEventListener('keydown',function(e){
+ if(e.key==='p'||e.key==='P'||e.key==='Escape'){if(paused)resumeGame();else pauseGame()}
+});
+document.addEventListener('visibilitychange',function(){if(document.hidden)pauseGame()});
+window.addEventListener('blur',pauseGame);
+refreshStart();
+})();
+</script>
+</body>
+</html>
