@@ -26,6 +26,11 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/arena.css">
 <style>[hidden]{display:none !important}</style>
+<style>
+.xview{margin:0 auto;max-width:1100px}
+.xview .ghud{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.xview iframe{display:block;width:100%;height:calc(100vh - 170px);min-height:520px;border:0;border-radius:16px;background:#050d24;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+</style>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
 {"@type":"WebApplication","name":"PSDC Typing Master","url":"https://clickboxpk.github.io/typingmaster/","applicationCategory":"EducationalApplication","operatingSystem":"Any (Web browser)","inLanguage":["en","ur"],"description":"Free online typing tutor, typing speed test, typing games and multiplayer typing competition for DIT students.","offers":{"@type":"Offer","price":"0","priceCurrency":"PKR"},"creator":{"@type":"Organization","name":"Skills Development Centre, PSDC"}},
@@ -142,7 +147,7 @@
     </section>
   </div>
 <section id="gamesHub" hidden>
- <div class="hubhead"><h2>🎮 Typing Games</h2><p>Khel khel me typing seekho! Game chuno aur shuru karo. <small>(Keyboard: <kbd>1</kbd> Sky Shooter · <kbd>2</kbd> Bubble Pop · <kbd>3</kbd> Turbo Racer)</small></p></div>
+ <div class="hubhead"><h2>🎮 Typing Games</h2><p>Khel khel me typing seekho! Game chuno aur shuru karo. <small>(Keyboard: <kbd>1</kbd> Sky Shooter · <kbd>2</kbd> Bubble Pop · <kbd>3</kbd> Turbo Racer · <kbd>4</kbd> Whack-A-Mole · <kbd>5</kbd> Bubble Shooter)</small></p></div>
  <div class="hubgrid">
   <button type="button" class="gcard" data-game="shoot" aria-label="Play Sky Shooter">
    <svg class="art" viewBox="0 0 300 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -197,6 +202,38 @@
     <span class="tags"><span>8 Levels</span><span>Snow</span><span>Jungle</span><span>Mountains</span></span>
     <span class="play">▶ Play</span></span>
   </button>
+  <button type="button" class="gcard" data-xgame="whack" aria-label="Play Whack-A-Mole">
+   <svg class="art" viewBox="0 0 300 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><linearGradient id="hw1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6cc8ff"/><stop offset=".45" stop-color="#c9f1ff"/><stop offset=".46" stop-color="#8be05a"/><stop offset="1" stop-color="#3da838"/></linearGradient></defs>
+    <rect width="300" height="160" fill="url(#hw1)"/>
+    <g fill="#2a1507"><ellipse cx="70" cy="130" rx="34" ry="12"/><ellipse cx="150" cy="130" rx="34" ry="12"/><ellipse cx="230" cy="130" rx="34" ry="12"/></g>
+    <g class="fl2"><ellipse cx="150" cy="104" rx="22" ry="24" fill="#8a5a3a"/><circle cx="141" cy="98" r="3.5" fill="#111"/><circle cx="159" cy="98" r="3.5" fill="#111"/><ellipse cx="150" cy="110" rx="6" ry="4.5" fill="#ff8aa0"/></g>
+    <g class="fl1"><ellipse cx="70" cy="108" rx="20" ry="22" fill="#e8b923"/><circle cx="63" cy="102" r="3" fill="#111"/><circle cx="77" cy="102" r="3" fill="#111"/><ellipse cx="70" cy="113" rx="5" ry="4" fill="#ff8aa0"/></g>
+    <text x="232" y="86" font-size="34" text-anchor="middle">🔨</text>
+    <g fill="#2a1507"><ellipse cx="70" cy="132" rx="34" ry="6" opacity=".0"/></g>
+   </svg>
+   <span class="gb"><h3>🔨 Whack-A-Mole <span class="new">NEW</span></h3>
+    <p>Mole holes se bahar aate hain, jaldi se hathoda maro! Golden mole ke zyada points, bomb se bacho. Tez nazar, tez hath!</p>
+    <span class="tags"><span>Reflex</span><span>3 Levels</span><span>Combo</span><span>60 sec</span></span>
+    <span class="play">▶ Play</span></span>
+  </button>
+  <button type="button" class="gcard" data-xgame="bshoot" aria-label="Play Typing Bubble Shooter">
+   <svg class="art" viewBox="0 0 300 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><linearGradient id="hx1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050d24"/><stop offset="1" stop-color="#10285a"/></linearGradient></defs>
+    <rect width="300" height="160" fill="url(#hx1)"/>
+    <g font-family="Tahoma,sans-serif" font-weight="800" font-size="13" text-anchor="middle" fill="#fff">
+     <g class="fl1"><circle cx="60" cy="50" r="26" fill="rgba(0,229,255,.22)" stroke="#00e5ff" stroke-width="2"/><text x="60" y="55">TYPE</text></g>
+     <g class="fl2"><circle cx="150" cy="40" r="24" fill="rgba(124,255,178,.22)" stroke="#7cffb2" stroke-width="2"/><text x="150" y="45">FAST</text></g>
+     <g class="fl3"><circle cx="238" cy="58" r="26" fill="rgba(255,84,112,.22)" stroke="#ff5470" stroke-width="2"/><text x="238" y="63">POP</text></g>
+    </g>
+    <line class="lz" x1="150" y1="118" x2="150" y2="70" stroke="#00e5ff" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 14"/>
+    <path d="M150 116 L160 142 L150 138 L140 142 Z" fill="#7cf0ff" stroke="#00e5ff" stroke-width="1.5"/>
+   </svg>
+   <span class="gb"><h3>🎯 Typing Bubble Shooter <span class="new">NEW</span></h3>
+    <p>Bubble ke andar ka poora word type karo aur Enter dabao, shooter bubble ko ura dega! Backspace se ghalti theek karo.</p>
+    <span class="tags"><span>Words</span><span>Accuracy</span><span>Levels</span><span>Beginner</span></span>
+    <span class="play">▶ Play</span></span>
+  </button>
   <div class="gcard soon"><b>🧩</b><span>More games coming soon</span><small>Naye typing games jaldi aa rahe hain</small></div>
  </div>
 </section>
@@ -214,6 +251,12 @@
 <div class="gcomp"><span>😊❤️ <b id="gGn">0</b></span><div class="bar"><i id="gGood"></i><i id="gTear"></i></div><span><b id="gTn">0</b> 😭💧</span></div></div>
 <div class="garena"><canvas id="gCv"></canvas><div class="gban" id="gBan"></div><div id="gOv"></div></div>
 <div class="gtip">Bubble ka letter type karo · Esc = pause · Jo bubble upar nikal gaya, us se tears jar me bharte hain!</div></section>
+<section id="whackView" class="xview" hidden>
+<div class="ghud"><button type="button" class="ghost backbtn" data-xback>← All Games</button><span class="gtip" style="margin:0">Mole par click / tap karo · P ya Esc = pause</span></div>
+<iframe title="Whack-A-Mole" loading="lazy" allow="autoplay" src="about:blank"></iframe></section>
+<section id="bshootView" class="xview" hidden>
+<div class="ghud"><button type="button" class="ghost backbtn" data-xback>← All Games</button><span class="gtip" style="margin:0">Word type karo · Enter = shoot · Esc = pause</span></div>
+<iframe title="Typing Bubble Shooter" loading="lazy" allow="autoplay" src="about:blank"></iframe></section>
 <section id="onlineView" hidden aria-label="Online typing competition"></section>
 </div>
 <input id="cap" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Typing input">
@@ -227,7 +270,7 @@
 <ul>
 <li><strong>Typing lessons</strong> for beginners with finger-position hints and printable progress reports.</li>
 <li><strong>Typing speed tests</strong> (1-10 minutes) to measure your WPM and accuracy.</li>
-<li><strong>Typing games</strong>: Sky Shooter, Bubble Pop and Turbo Typing Racer to practise keys while having fun.</li>
+<li><strong>Typing games</strong>: Sky Shooter, Bubble Pop, Turbo Typing Racer, Whack-A-Mole and Typing Bubble Shooter to practise keys while having fun.</li>
 <li><strong>Online typing competition</strong>: challenge classmates 1 vs 1, in 2 vs 2 teams, or race everyone in a car race with Easy, Medium and Hard levels.</li>
 </ul>
 <h2>Frequently asked questions</h2>
@@ -243,5 +286,6 @@
 <script src="js/app.js" defer></script>
 <script src="js/multiplayer.js" defer></script>
 <script src="js/ads.js" defer></script>
+<script src="js/games-extra.js" defer></script>
 </body>
 </html>
